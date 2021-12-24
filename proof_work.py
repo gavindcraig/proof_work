@@ -1,10 +1,9 @@
 import numpy
 import hashlib
-# CREATE A RANDOM STRING WITH X MISSING BYTES
+import string
+import itertools
 
-# GUESS PROOF OF WORK TO MAKE X TRAILING BYTES = 0
 
-# CLASS FOR ROUND
 class Block:
     """A block object for proof of work game"""
     pattern = '0'
@@ -13,9 +12,9 @@ class Block:
         self.content = numpy.random.bytes(16).decode(self.enc)
         self.tail = tail * 2
     def guess(self, g):
+        # GUESS PROOF OF WORK TO MAKE X TRAILING BYTES = 0
         s = self.content + g
         h = hashlib.md5(s.encode(self.enc)).hexdigest()
-        print(h)
         result = h[-self.tail:]
         if result.isnumeric() and int(result) == 0:
             return True
@@ -23,14 +22,16 @@ class Block:
 
 def main():
     b = Block()
+    i = 1
     while True:
-        if b.guess(input('Guess: ')):
-            print('Correct!')
-            break
-        print('Incorrect!')
+        for c in itertools.permutations(string.ascii_letters + string.digits,
+                                        i):
+            if b.guess(''.join(c)):
+                print('Proof of work: ' + ''.join(c))
+                exit(0)
+        i = i + 1
 
 
 if __name__ == '__main__':
     main()
-
 
