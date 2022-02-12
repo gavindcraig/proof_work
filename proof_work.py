@@ -22,6 +22,7 @@ class Block:
 
 
 def main():
+    # TODO: EXIT AND WARN IF ARGUMENT IS NOT ONE INTEGER
     if len(sys.argv) > 1:
         a = int(sys.argv.pop())
     else:
